@@ -1,0 +1,21 @@
+.NewTableForm {
+  margin: auto;
+  width: 80%;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 200;
+  opacity: 1;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 600px) {
+  .NewTableForm {
+      width: 500px;
+  }
+}
