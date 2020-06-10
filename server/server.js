@@ -27,13 +27,40 @@ io.on('connect', socket => {
 
     callback(tableId, playerId);
   });
+
+  socket.on('getTableState', async (tableId, callback) => {
+    const tableObject = await getTable(tableId);
+    console.log(tableObject);
+    const playersArray = await getPlayersFromTable(tableId);
+    console.log(playersArray);
+
+    callback(playersArray, tableObject);
+  });
 });
+
+function getTable (tableId) {
+  return new Promise((resolve, reject) => {
+    Table.find({ id: tableId }, (err, result) => {
+      console.log(`Found table: ${JSON.stringify(result)}!`);
+      resolve(result);
+    });
+  });
+};
+
+function getPlayersFromTable (tableId) {
+  return new Promise((resolve, reject) => {
+    Player.find({ tableId: tableId }, (err, result) => {
+      console.log(`Found players: ${JSON.stringify(result)}!`);
+      resolve(result);
+    });
+  });
+};
 
 function addNewPlayerDataToMongo (player) {
   return new Promise((resolve, reject) => {
     let newPlayerObject = new Player(player);
     newPlayerObject.save();
-    
+
     resolve(`New person added to table: ${ newPlayerObject }`);
   });
 };
