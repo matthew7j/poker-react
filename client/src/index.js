@@ -6,6 +6,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { PersistGate } from 'redux-persist/integration/react'
 import { BrowserRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 
 import * as serviceWorker from './serviceWorker';
 import './index.css';
@@ -26,13 +27,15 @@ const persistor = persistStore(store)
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store = { store }>
-      <PersistGate loading= { null } persistor = { persistor }>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
+    <CookiesProvider>
+      <Provider store = { store }>
+        <PersistGate loading= { null } persistor = { persistor }>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </PersistGate>
+      </Provider>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

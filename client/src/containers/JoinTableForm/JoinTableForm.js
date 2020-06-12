@@ -1,32 +1,17 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-import classes from './NewTableForm.module.css';
+import classes from './JoinTableForm.module.css';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
-import * as actionTypes from '../../store/actions';
 
-class NewTableForm extends Component {
+class JoinTableForm extends Component {
   state = {
     inputs: {
-      name: {
+      tableId: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Your Display Name'
-        },
-        value: '',
-        validation: {
-          required: true
-        },
-        valid: false,
-        touched: false
-      },
-      chips: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Your Chip Count'
+          placeholder: 'Table ID to join'
         },
         value: '',
         validation: {
@@ -75,10 +60,6 @@ class NewTableForm extends Component {
     this.setState({ inputs: updatedNameForm, formIsValid });
   };
 
-  componentDidMount = () => {
-    this.props.clearReduxStore();
-  };
-
   render = () => {
     const formElementsArray = [];
 
@@ -89,14 +70,9 @@ class NewTableForm extends Component {
       });
     }
 
-    const personObject = {
-      name: this.state.inputs.name.value,
-      chips: this.state.inputs.chips.value
-    };
-  
     return (
-      <div className = { classes.NewTableForm }>
-        <form onSubmit = { event => this.props.addNewTableButtonHandler(event, personObject) }>
+      <div className = { classes.JoinTableForm }>
+        <form onSubmit = { event => this.props.joinTableButtonHandler(this.state.inputs.tableId.value) }>
             { formElementsArray.map(formElement => (
                 <Input key = { formElement.id }
                   elementType = { formElement.config.elementType } 
@@ -116,15 +92,4 @@ class NewTableForm extends Component {
   }; 
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    clearReduxStore: () => {
-      console.log('Clear Redux')
-      return dispatch({
-        type: actionTypes.CLEAR_REDUX
-      })
-    }
-  };
-};
-
-export default connect(null, mapDispatchToProps)(NewTableForm);
+export default JoinTableForm;

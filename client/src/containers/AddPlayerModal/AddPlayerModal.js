@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from 'react';
 
-import classes from './NewTableForm.module.css';
 import Input from '../../components/UI/Input/Input';
+import classes from './AddPlayerModal.module.css';
 import Button from '../../components/UI/Button/Button';
-import * as actionTypes from '../../store/actions';
+import Backdrop from '../../components/UI/Backdrop/Backdrop';
 
-class NewTableForm extends Component {
+class AddPlayerModal extends Component {
   state = {
-    inputs: {
+    nameForm: {
       name: {
         elementType: 'input',
         elementConfig: {
@@ -22,11 +21,11 @@ class NewTableForm extends Component {
         valid: false,
         touched: false
       },
-      chips: {
+      chipAmount: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Your Chip Count'
+          placeholder: 'Your Chip Amount'
         },
         value: '',
         validation: {
@@ -34,14 +33,20 @@ class NewTableForm extends Component {
         },
         valid: false,
         touched: false
-      }
+      },
     },
     formIsValid: false
   };
 
+  addPlayerHandler = event => {
+    event.preventDefault();
+
+    this.props.addPlayerHandler(this.state.nameForm.name.value, this.state.nameForm.chipAmount.value, this.props.seatIndex);
+  };
+
   checkValidity = (value, rules) => {
     let isValid = true;
-  
+
     if (rules) {
       if (rules.required) {
         isValid = value.trim() !== '' && isValid;
@@ -55,48 +60,45 @@ class NewTableForm extends Component {
         isValid = value.length <= rules.maxLength && isValid;
       }
     }
-  
+
     return isValid;
   };
-  
+
   inputChangedHandler = (event, inputIdentifier) => {
-    const updatedNameForm = { ...this.state.inputs };
+    const updatedNameForm = { ...this.state.nameForm };
     const updatedNameElement = { ...updatedNameForm[inputIdentifier] };
     updatedNameElement.value = event.target.value;
     updatedNameElement.valid = this.checkValidity(updatedNameElement.value, updatedNameElement.validation);
     updatedNameElement.touched = true;
     updatedNameForm[inputIdentifier] = updatedNameElement;
-  
+
     let formIsValid = true;
     for (let inputIdentifier in updatedNameForm) {
       formIsValid = updatedNameForm[inputIdentifier].valid && formIsValid;
     }
-  
-    this.setState({ inputs: updatedNameForm, formIsValid });
-  };
 
-  componentDidMount = () => {
-    this.props.clearReduxStore();
+    this.setState({ nameForm: updatedNameForm, formIsValid });
   };
 
   render = () => {
     const formElementsArray = [];
 
-    for (let key in this.state.inputs) {
+    for (let key in this.state.nameForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.inputs[key]
+        config: this.state.nameForm[key]
       });
     }
 
-    const personObject = {
-      name: this.state.inputs.name.value,
-      chips: this.state.inputs.chips.value
-    };
-  
-    return (
-      <div className = { classes.NewTableForm }>
-        <form onSubmit = { event => this.props.addNewTableButtonHandler(event, personObject) }>
+    if (!this.props.show) {
+      return null;
+    }
+
+    let form = (
+      <Fragment>
+        <Backdrop show = { this.props.show } clicked = { this.props.modalClosed }/>
+        <div className = { classes.addPlayerModal } >
+          <form onSubmit = { event => this.addPlayerHandler(event) }>
             { formElementsArray.map(formElement => (
                 <Input key = { formElement.id }
                   elementType = { formElement.config.elementType } 
@@ -111,20 +113,13 @@ class NewTableForm extends Component {
             }
             <Button color = 'primary' >Submit</Button>
           </form>
-      </div>
+        </div>
+      </Fragment>
     );
-  }; 
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    clearReduxStore: () => {
-      console.log('Clear Redux')
-      return dispatch({
-        type: actionTypes.CLEAR_REDUX
-      })
-    }
+    return form
   };
+
 };
 
-export default connect(null, mapDispatchToProps)(NewTableForm);
+export default AddPlayerModal;

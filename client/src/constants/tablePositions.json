@@ -1,0 +1,143 @@
+{
+  "1": {
+    "positions": [{
+      "x": "0px",
+      "y": "0px"
+    }]
+  },
+  "2": {
+    "positions": [{
+      "styles": {
+        "transform": "translate(-50%, -100%)",
+        "top": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(-50%, 110%)",
+        "bottom": 0,
+        "left": "50%"
+      }
+    }]
+  },
+  "3": {
+    "positions": [{
+      "styles": {
+        "transform": "translate(-50%, -100%)",
+        "top": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 0%)",
+        "right": 20,
+        "bottom": "10%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 0%)",
+        "left": 20,
+        "bottom": "10%"
+      }
+    }]
+  },
+  "4": {
+    "positions": [{
+      "styles": {
+        "transform": "translate(-50%, -100%)",
+        "top": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(80%, 50%)",
+        "right": 0,
+        "bottom": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(-50%, 110%)",
+        "left": "50%",
+        "bottom": "0"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(-80%, 50%)",
+        "left": 0,
+        "bottom": "50%"
+      }
+    }]
+  },
+  "5": {
+    "positions": [{
+      "styles": {
+        "transform": "translate(-50%, -100%)",
+        "top": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(20%, 50%)",
+        "right": 0,
+        "top": "10%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 0%)",
+        "right": "10%",
+        "bottom": "0"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 0%)",
+        "left": "10%",
+        "bottom": "0"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(-30%, 50%)",
+        "left": 0,
+        "top": "10%"
+      }
+    }]
+  },
+  "6": {
+    "positions": [{
+      "styles": {
+        "transform": "translate(-50%, -100%)",
+        "top": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 90%)",
+        "right": 0,
+        "top": 0
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, -90%)",
+        "right": 0,
+        "bottom": 0
+      }
+    }, {
+      "styles": {
+        "transform": "translate(-50%, 110%)",
+        "bottom": 0,
+        "left": "50%"
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, -90%)",
+        "left": 0,
+        "bottom": 0
+      }
+    }, {
+      "styles": {
+        "transform": "translate(0%, 90%)",
+        "left": 0,
+        "top": 0
+      }
+    }]
+  }
+}

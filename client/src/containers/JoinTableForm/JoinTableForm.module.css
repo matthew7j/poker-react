@@ -1,0 +1,21 @@
+.JoinTableForm {
+  margin: auto;
+  width: 80%;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 200;
+  opacity: 1;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 600px) {
+  .JoinTableForm {
+      width: 500px;
+  }
+}

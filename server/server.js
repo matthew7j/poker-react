@@ -13,46 +13,59 @@ const io = socketio(server);
 
 io.on('connect', socket => {
   socket.on('createNewTable', async (table, player, callback) => {
-    const tableId = Math.floor(100000 + Math. random() * 900000);
-    table.id = tableId;
-
-    const playerId = Math.floor(100000 + Math. random() * 900000);
-    player.id = playerId;
-    player.tableId = tableId;
-
     const addTableResponse = await addNewTableDataToMongo(table);
     console.log(addTableResponse);
     const addPlayerResponse = await addNewPlayerDataToMongo(player);
     console.log(addPlayerResponse);
 
-    callback(tableId, playerId);
+    callback(addPlayerResponse, addTableResponse);
   });
 
   socket.on('getTableState', async (tableId, callback) => {
     const tableObject = await getTable(tableId);
-    console.log(tableObject);
     const playersArray = await getPlayersFromTable(tableId);
-    console.log(playersArray);
 
     callback(playersArray, tableObject);
+  });
+
+  socket.on('addPlayerToTable', async (player, callback) => {
+    const addPlayerResponse = await addNewPlayerDataToMongo(player);
+    console.log(addPlayerResponse);
+  
+    let playersArray = await getPlayersFromTable(player.tableId);
+    playersArray = await getPlayersFromTable(player.tableId);
+
+    io.emit('syncPlayers', playersArray);
+
+    callback();
+  });
+
+  socket.on('removePlayerFromTable', async (player, callback) => {
+    const tableId = player.tableId;
+    await removePlayerDataFromMongo(player);
+  
+    let playersArray = await getPlayersFromTable(tableId);
+    playersArray = await getPlayersFromTable(tableId);
+    
+    io.emit('syncPlayers', playersArray);
+  
+    callback();
   });
 });
 
 function getTable (tableId) {
   return new Promise((resolve, reject) => {
     Table.find({ id: tableId }, (err, result) => {
-      console.log(`Found table: ${JSON.stringify(result)}!`);
-      resolve(result);
+      resolve(result[0]);
     });
   });
 };
 
 function getPlayersFromTable (tableId) {
   return new Promise((resolve, reject) => {
-    Player.find({ tableId: tableId }, (err, result) => {
-      console.log(`Found players: ${JSON.stringify(result)}!`);
+    Player.find({ tableId: tableId }, ((err, result) => {
       resolve(result);
-    });
+    }));
   });
 };
 
@@ -61,7 +74,17 @@ function addNewPlayerDataToMongo (player) {
     let newPlayerObject = new Player(player);
     newPlayerObject.save();
 
-    resolve(`New person added to table: ${ newPlayerObject }`);
+    resolve(newPlayerObject);
+  });
+};
+
+function removePlayerDataFromMongo(player) {
+  return new Promise((resolve, reject) => {
+    console.log(`going to remove id: ${player.id}`);
+    Player.findOneAndDelete({ id: player.id }, ((err, result) => {
+      console.log(`deleted? ${JSON.stringify(result)}`);
+      resolve(result);
+    }));
   });
 };
 
@@ -70,6 +93,6 @@ function addNewTableDataToMongo (table) {
     let newTableObject = new Table(table);
     newTableObject.save();
 
-    resolve(`New table being added: ${JSON.stringify(table)}`)
+    resolve(newTableObject);
   });
 };
