@@ -6,7 +6,8 @@ const Player = new Schema({
   tableId: Number,
   name: String,
   chips: Number,
-  seatIndex: Number
+  seatIndex: Number,
+  socketId: String
 });
 
 module.exports = mongoose.model('Player', Player);

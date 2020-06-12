@@ -46,6 +46,10 @@ class Table extends Component {
     socket.on('syncPlayers', players => {
       this.props.onPlayersUpdate(players);
     });
+
+    socket.on('dealCards', cards => {
+      console.log(`cards: ${JSON.stringify(cards)}`);
+    });
   }
 
   removePlayerButtonHandler = () => {
@@ -58,6 +62,12 @@ class Table extends Component {
       // Redirect to root URL
       this.props.history.push(`/`);
     });
+  };
+
+  startNewHand = () => {
+    // Emit to server, shuffle cards and deal to players
+
+    socket.emit('startNewHand', this.props.table);
   };
   
   render = () => {
@@ -105,6 +115,11 @@ class Table extends Component {
         <div className = { classes.Table }>
           { seatsJsx }
         </div>
+        <Button 
+          color = 'white' 
+          clicked = { this.startNewHand } >
+            Leave Table
+        </Button>
       </Fragment>
     );
   }
@@ -112,7 +127,7 @@ class Table extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    tableId: state.tableId,
+    table: state.table,
     players: state.players,
     player: state.player,
     cookies: ownProps.cookies
