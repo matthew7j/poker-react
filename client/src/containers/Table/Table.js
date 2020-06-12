@@ -52,6 +52,12 @@ class Table extends Component {
     });
   }
 
+  componentWillUnmount = () => {
+    // stop listening to events
+    socket.off('syncPlayers');
+    socket.off('dealCards');
+  }
+
   removePlayerButtonHandler = () => {
     // Emit to server and remove player
   
