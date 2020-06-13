@@ -84,7 +84,6 @@ class Table extends Component {
   };
   
   render = () => {
-    console.log('rendering...');
     const seatsJsx = [];
     const maxNumberOfPlayers = 6;
 
@@ -117,6 +116,9 @@ class Table extends Component {
       );
     };
 
+    const foldButtonOverrides = ['fold'];
+    const checkButtonOverrides = ['check'];
+
     return (
       <Fragment>
         <Button 
@@ -127,10 +129,22 @@ class Table extends Component {
         <div className = { classes.Table }>
           { seatsJsx }
         </div>
+        <div className = { classes.playerControls }>
+          <Button 
+            color = 'white'
+            btnType = { foldButtonOverrides } >
+              Fold
+          </Button>
+          <Button 
+            color = 'white'
+            btnType = { checkButtonOverrides } >
+              Check
+          </Button>
+        </div>
         <Button 
           color = 'white' 
           clicked = { this.startNewHand } >
-            Leave Table
+            Start Hand
         </Button>
       </Fragment>
     );

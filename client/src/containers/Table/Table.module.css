@@ -9,3 +9,15 @@
   box-shadow: 0 100px 50px black;
   position: relative;
 }
+
+.playerControls {
+  background-color: rgb(85, 85, 85);
+  height: 80px;
+  width: 300px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  border: 2px solid rgb(0, 0, 0);
+  border-style: double;
+  position: relative;
+  vertical-align: middle;
+}

@@ -44,9 +44,7 @@ class Seat extends Component {
   };
 
   componentDidUpdate = () => {
-    console.log(`asdjnk: ${this.state.playerAlreadyHasSeat}`);
     if (Object.keys(this.props.player).length !== 0) {
-      console.log('Player already has seat');
       if (!this.state.playerAlreadyHasSeat) {
         this.setPlayerAlreadyHasSeat(true);
       }
@@ -58,7 +56,6 @@ class Seat extends Component {
   }
 
   render = () => {
-    console.log('rendering seat');
     let jsx = null;
     let classesArray = [];
     classesArray.push(classes.Seat);

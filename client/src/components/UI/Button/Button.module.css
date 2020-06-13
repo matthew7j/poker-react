@@ -23,3 +23,23 @@
   color: #ccc;
   cursor: not-allowed;
 }
+
+.fold {
+  background-color: rgb(253, 89, 124);
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 17px;
+  margin-left: 30px;
+}
+
+.check {
+  background-color: rgb(93, 255, 155);
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 17px;
+  margin-right: 30px;
+}
