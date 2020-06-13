@@ -115,6 +115,14 @@ io.on('connect', socket => {
 
     io.to(player.socketId).emit('beginRound')
   });
+
+  socket.on('check', () => {
+    console.log(`player ${socket.id} checked`);
+  });
+
+  socket.on('fold', () => {
+    console.log(`player ${socket.id} folded`);
+  });
 });
 
 function getTable (tableId) {

@@ -6,7 +6,8 @@ let timerInterval = null;
 
 class Timer extends Component {
   state = {
-    time: null
+    time: null,
+    disabled: true
   };
 
   updateTimer = () => {
@@ -35,11 +36,31 @@ class Timer extends Component {
   };
 
   componentDidUpdate = () => {
+    if (this.props.disabled) {
+      if (!this.state.disabled) {
+        this.setState(() => {
+          return { time: this.props.time, disabled: true };
+        });
+      }
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
     if (this.props.time > 0 && !this.props.disabled && !timerInterval) {
+      this.setState(() => {
+        return { disabled: false };
+      });
       timerInterval = setInterval(() => {
         this.updateTimer();
       }, 1000)
     }
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(timerInterval);
   }
 
   render = () => {
@@ -55,7 +76,7 @@ class Timer extends Component {
       timerType = 'ten';
     }
 
-    if (this.props.disabled) {
+    if (this.state.disabled) {
       timerType = 'disabled'
     }
 

@@ -98,6 +98,20 @@ class Table extends Component {
 
     socket.emit('startNewHand', this.props.table);
   };
+
+  checkButtonHandler = () => {
+    this.setState(() => {
+      return { thisPlayersTurn: false }
+    });
+    socket.emit('check');
+  };
+
+  foldButtonHandler = () => {
+    this.setState(() => {
+      return { thisPlayersTurn: false }
+    });
+    socket.emit('fold');
+  };
   
   render = () => {
     const seatsJsx = [];
@@ -145,16 +159,18 @@ class Table extends Component {
         <div className = { classes.Table }>
           { seatsJsx }
         </div>
-        <Timer time = { 10 } disabled = { !this.state.thisPlayersTurn }/>
+        <Timer time = { 10 } disabled = { !this.state.thisPlayersTurn } timeRanOut = { this.fold }/>
         <div className = { classes.playerControls }>
           <Button 
             color = 'white'
-            btnType = { foldButtonOverrides } >
+            btnType = { foldButtonOverrides }
+            clicked = { this.foldButtonHandler }>
               Fold
           </Button>
           <Button 
             color = 'white'
-            btnType = { checkButtonOverrides } >
+            btnType = { checkButtonOverrides }
+            clicked = { this.checkButtonHandler }>
               Check
           </Button>
         </div>
