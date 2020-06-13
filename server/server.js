@@ -16,6 +16,7 @@ const io = socketio(server);
 
 io.on('connect', socket => {  
   let cardsMap = new Map();
+  let playersMap = new Map();
 
   socket.on('findAndUpdateCurrentSocketIfItExists', async (socketId, player = null, callback) => {
     console.log('server: findCurrentSocketIfItExists');
@@ -44,6 +45,8 @@ io.on('connect', socket => {
     const addTableResponse = await addNewTableDataToMongo(table);
     console.log(addTableResponse);
     player.socketId = socket.id;
+    player.stillInRound = true;
+    player.stillInHand = true;
     const addPlayerResponse = await addNewPlayerDataToMongo(player);
     console.log(addPlayerResponse);
 
@@ -59,6 +62,8 @@ io.on('connect', socket => {
 
   socket.on('addPlayerToTable', async (player, callback) => {
     player.socketId = socket.id;
+    player.stillInRound = true;
+    player.stillInHand = true;
     const addPlayerResponse = await addNewPlayerDataToMongo(player);
     console.log(addPlayerResponse);
   
@@ -97,14 +102,18 @@ io.on('connect', socket => {
       }
 
       await addPlayerCardsToMongo(hand);
+      await updatePlayer(player);
 
-      io.to(player.socketId).emit('dealCards', hand.card1);
-      io.to(player.socketId).emit('dealCards', hand.card2);
+      io.to(player.socketId).emit('dealCards', hand);
     }
 
-    console.log(`cards length after: ${cards.length}`);
-
     cardsMap.set(table.id, cards);
+
+    playersMap.set(table.id, playersMap);
+    // Start timer for first player (will eventually be player after dealer token)
+    const player = playersArray[0];
+
+    io.to(player.socketId).emit('beginRound')
   });
 });
 
@@ -128,6 +137,15 @@ function getPlayer (playerId) {
 };
 
 function addPlayer (player) {
+  return new Promise((resolve, reject) => {
+    let newPlayerObject = new Player(player);
+    newPlayerObject.save();
+
+    resolve(newPlayerObject);
+  });
+};
+
+function updatePlayer (player) {
   return new Promise((resolve, reject) => {
     let newPlayerObject = new Player(player);
     newPlayerObject.save();

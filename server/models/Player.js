@@ -7,7 +7,9 @@ const Player = new Schema({
   name: String,
   chips: Number,
   seatIndex: Number,
-  socketId: String
+  socketId: String,
+  stillInHand: Boolean,
+  stillInRound: Boolean
 });
 
 module.exports = mongoose.model('Player', Player);

@@ -60,6 +60,18 @@ class Table extends Component {
       socket.on('dealCards', cards => {
         console.log(`cards: ${JSON.stringify(cards)}`);
       });
+
+      socket.on('beginRound', () => {
+        this.setState(() => {
+          return { thisPlayersTurn: true };
+        });
+      });
+
+      socket.on('waitingForPlayer', () => {
+        this.setState(() => {
+          return { thisPlayersTurn: true };
+        })
+      });
     }, 1000);
   }
 
@@ -74,7 +86,6 @@ class Table extends Component {
     // Emit to server and remove player
   
     socket.emit('removePlayerFromTable', this.props.player, (playersArray) => {
-      console.log(`array after remove player: ${JSON.stringify(playersArray)}`);
       this.props.onLeaveTable(playersArray);
 
       // Redirect to root URL
@@ -123,13 +134,6 @@ class Table extends Component {
 
     const foldButtonOverrides = ['fold'];
     const checkButtonOverrides = ['check'];
-    let timerJSX;
-
-    if (this.state.thisPlayersTurn) {
-      timerJSX = <Timer time = { 10 }/>
-    } else {
-      timerJSX = <Timer time = { 10 } disabled = { true }/>
-    }
 
     return (
       <Fragment>
@@ -141,7 +145,7 @@ class Table extends Component {
         <div className = { classes.Table }>
           { seatsJsx }
         </div>
-        { timerJSX }
+        <Timer time = { 10 } disabled = { !this.state.thisPlayersTurn }/>
         <div className = { classes.playerControls }>
           <Button 
             color = 'white'

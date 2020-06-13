@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 
 import classes from './Timer.module.css';
  
-let timerInterval;
+let timerInterval = null;
 
 class Timer extends Component {
   state = {
-    time: null,
-    disabled: true
+    time: null
   };
 
   updateTimer = () => {
@@ -23,15 +22,10 @@ class Timer extends Component {
   };
 
   componentDidMount = () => {
-    if (this.props.disabled) {
-      this.setState(() => {
-        return { time: this.props.time, disabled: true };
-      });
-    } else {
-      this.setState(() => {
-        return { time: this.props.time };
-      });
-    }
+    console.log('component mounting..');
+    this.setState(() => {
+      return { time: this.props.time };
+    });
     
     if (this.props.time > 0 && !this.props.disabled) {
       timerInterval = setInterval(() => {
@@ -40,8 +34,17 @@ class Timer extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    if (this.props.time > 0 && !this.props.disabled && !timerInterval) {
+      timerInterval = setInterval(() => {
+        this.updateTimer();
+      }, 1000)
+    }
+  }
+
   render = () => {
     let timerType = null;
+
     if (this.state.time <= 2) {
       timerType = 'two';
     } else if (this.state.time <= 4) {
@@ -52,7 +55,7 @@ class Timer extends Component {
       timerType = 'ten';
     }
 
-    if (this.state.disabled) {
+    if (this.props.disabled) {
       timerType = 'disabled'
     }
 
