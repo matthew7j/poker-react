@@ -14,7 +14,32 @@ let app = express();
 const server = app.listen(port);
 const io = socketio(server);
 
-io.on('connect', socket => {
+io.on('connect', socket => {  
+  let cardsMap = new Map();
+
+  socket.on('findAndUpdateCurrentSocketIfItExists', async (socketId, player = null, callback) => {
+    console.log('server: findCurrentSocketIfItExists');
+    let result = null;
+
+    console.log(`socket: ${JSON.stringify(socketId)}`);
+    console.log(`player: ${JSON.stringify(player)}`);
+
+    if (player.id) {
+      let playerId = player.id;
+      let currentPlayer = await getPlayer(playerId);
+      currentPlayer = await getPlayer(playerId);
+      console.log(`currentPlayer socketId: ${JSON.stringify(currentPlayer.socketId)}`);
+      console.log(`socketId: ${JSON.stringify(socketId)}`);
+      if (currentPlayer.socketId != socketId) {
+        console.log(`adding player!!!!`);
+        currentPlayer.socketId = socketId;
+        result = await addPlayer(currentPlayer);
+      }
+    }
+    
+    callback(result);
+  });
+
   socket.on('createNewTable', async (table, player, callback) => {
     const addTableResponse = await addNewTableDataToMongo(table);
     console.log(addTableResponse);
@@ -58,11 +83,9 @@ io.on('connect', socket => {
   });
 
   socket.on('startNewHand', async table => {
-    let playersArray = await getPlayersFromTable(table.id);
     let cards = getShuffledDeck();
-
-    let playerHands = [];
-    let playerHand = {};
+    cardsMap.set(table.id, cards);
+    let playersArray = await getPlayersFromTable(table.id);
 
     for(let i = 0; i < playersArray.length; i++) {
       const player = playersArray[i];
@@ -78,6 +101,10 @@ io.on('connect', socket => {
       io.to(player.socketId).emit('dealCards', hand.card1);
       io.to(player.socketId).emit('dealCards', hand.card2);
     }
+
+    console.log(`cards length after: ${cards.length}`);
+
+    cardsMap.set(table.id, cards);
   });
 });
 
@@ -86,6 +113,26 @@ function getTable (tableId) {
     Table.find({ id: tableId }, (err, result) => {
       resolve(result[0]);
     });
+  });
+};
+
+function getPlayer (playerId) {
+  return new Promise((resolve, reject) => {
+    Player.find({ id: playerId }, (err, result) => {
+      if (result.length > 0) {
+        resolve(result[0]);
+      }
+      resolve(null);
+    });
+  });
+};
+
+function addPlayer (player) {
+  return new Promise((resolve, reject) => {
+    let newPlayerObject = new Player(player);
+    newPlayerObject.save();
+
+    resolve(newPlayerObject);
   });
 };
 
@@ -118,9 +165,7 @@ function addNewPlayerDataToMongo (player) {
 
 function removePlayerDataFromMongo(player) {
   return new Promise((resolve, reject) => {
-    console.log(`going to remove id: ${player.id}`);
     Player.findOneAndDelete({ id: player.id }, ((err, result) => {
-      console.log(`deleted? ${JSON.stringify(result)}`);
       resolve(result);
     }));
   });

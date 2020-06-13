@@ -41,21 +41,28 @@ class Table extends Component {
 
   componentDidMount = () => {
     console.log(`[TABLE] componentDidMount`);
-    this.getCurrentTableStateFromServer();
 
-    socket.on('syncPlayers', players => {
-      this.props.onPlayersUpdate(players);
-    });
+    // need to find another way to do this
+    setTimeout(() => { 
+      socket.emit('findAndUpdateCurrentSocketIfItExists', socket.id, this.props.player, () => {
+        this.getCurrentTableStateFromServer();
+      });
 
-    socket.on('dealCards', cards => {
-      console.log(`cards: ${JSON.stringify(cards)}`);
-    });
+      socket.on('syncPlayers', players => {
+        this.props.onPlayersUpdate(players);
+      });
+
+      socket.on('dealCards', cards => {
+        console.log(`cards: ${JSON.stringify(cards)}`);
+      });
+    }, 1000);
   }
 
   componentWillUnmount = () => {
-    // stop listening to events
     socket.off('syncPlayers');
     socket.off('dealCards');
+
+    socket.disconnect();
   }
 
   removePlayerButtonHandler = () => {
@@ -74,6 +81,7 @@ class Table extends Component {
     // Emit to server, shuffle cards and deal to players
 
     socket.emit('startNewHand', this.props.table);
+    socket.emit('dealCards', this.props.table);
   };
   
   render = () => {
