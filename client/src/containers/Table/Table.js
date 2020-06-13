@@ -10,8 +10,13 @@ import socket from '../../utilities/socketConnection';
 import * as actionTypes from '../../store/actions';
 import Button from '../../components/UI/Button/Button';
 import Player from '../../classes/Player/Player';
+import Timer from '../../components/UI/Timer/Timer';
 
 class Table extends Component {
+  state = {
+    thisPlayersTurn: false
+  };
+
   getCurrentTableStateFromServer = () => {
     let tableId;
 
@@ -118,6 +123,13 @@ class Table extends Component {
 
     const foldButtonOverrides = ['fold'];
     const checkButtonOverrides = ['check'];
+    let timerJSX;
+
+    if (this.state.thisPlayersTurn) {
+      timerJSX = <Timer time = { 10 }/>
+    } else {
+      timerJSX = <Timer time = { 10 } disabled = { true }/>
+    }
 
     return (
       <Fragment>
@@ -129,6 +141,7 @@ class Table extends Component {
         <div className = { classes.Table }>
           { seatsJsx }
         </div>
+        { timerJSX }
         <div className = { classes.playerControls }>
           <Button 
             color = 'white'

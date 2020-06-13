@@ -31,7 +31,7 @@ io.on('connect', socket => {
       console.log(`currentPlayer socketId: ${JSON.stringify(currentPlayer.socketId)}`);
       console.log(`socketId: ${JSON.stringify(socketId)}`);
       if (currentPlayer.socketId != socketId) {
-        console.log(`adding player!!!!`);
+        console.log('Updating player socket ID');
         currentPlayer.socketId = socketId;
         result = await addPlayer(currentPlayer);
       }

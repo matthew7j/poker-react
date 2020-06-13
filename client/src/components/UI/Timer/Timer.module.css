@@ -1,0 +1,30 @@
+.Timer {
+  color: black;
+  background-color: rgb(85, 85, 85);
+  width: 50px;
+  height: 45px;
+  border: 2px solid black;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  font-size: xx-large;
+}
+
+.ten {
+  background-color: rgb(93, 255, 155);
+}
+
+.seven {
+  background-color: rgb(220, 251, 80);
+}
+
+.four {
+  background-color: rgb(253, 200, 101);
+}
+
+.two {
+  background-color: rgb(253, 89, 124);
+}
+
+.disabled {
+  visibility: hidden;
+}
