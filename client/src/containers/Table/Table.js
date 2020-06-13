@@ -81,7 +81,6 @@ class Table extends Component {
     // Emit to server, shuffle cards and deal to players
 
     socket.emit('startNewHand', this.props.table);
-    socket.emit('dealCards', this.props.table);
   };
   
   render = () => {
@@ -111,10 +110,9 @@ class Table extends Component {
         <Seat key = { currentPlayer.seatIndex } 
           styleProp = { tablePositionStyles.styles }
           seatIndex = { currentPlayer.seatIndex }
-          player = { currentPlayer }
+          playerInThisSeat = { currentPlayer }
           addPlayerHandler = { this.addPlayerHandler }
           tableId = { this.props.tableId }
-          playerId = { this.props.currentPlayerId }
         />
       );
     };

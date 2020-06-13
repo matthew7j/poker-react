@@ -14,8 +14,7 @@ class Seat extends Component {
 
   addPlayerButtonHandler = () => {
     this.setState({
-      showModal: true,
-      playerAlreadyHasSeat: true
+      showModal: true
     });
   };
 
@@ -32,24 +31,48 @@ class Seat extends Component {
   };
 
   componentDidMount = () => {
-    if (this.props.currentPlayerId) {
+    if (Object.keys(this.props.player).length !== 0) {
       console.log('Player already has seat');
-      this.setPlayerAlreadyHasSeat(true);
+      if (!this.state.playerAlreadyHasSeat) {
+        this.setPlayerAlreadyHasSeat(true);
+      }
     } else {
-      console.log('Player does not already has seat');
-      this.setPlayerAlreadyHasSeat(false);
+      if (this.state.playerAlreadyHasSeat) {
+        this.setPlayerAlreadyHasSeat(false);
+      }
     }
   };
 
+  componentDidUpdate = () => {
+    console.log(`asdjnk: ${this.state.playerAlreadyHasSeat}`);
+    if (Object.keys(this.props.player).length !== 0) {
+      console.log('Player already has seat');
+      if (!this.state.playerAlreadyHasSeat) {
+        this.setPlayerAlreadyHasSeat(true);
+      }
+    } else {
+      if (this.state.playerAlreadyHasSeat) {
+        this.setPlayerAlreadyHasSeat(false);
+      }
+    }
+  }
+
   render = () => {
+    console.log('rendering seat');
     let jsx = null;
     let classesArray = [];
     classesArray.push(classes.Seat);
 
-    if (this.props.player) {
+    if (this.props.player && this.props.playerInThisSeat && (this.props.player.id === this.props.playerInThisSeat.id)) {
+      jsx = (
+        <div className = { classes.seatTakenByPlayer } style = { this.props.styleProp }>
+          <p>{ this.props.player.name } &nbsp;	&nbsp;	&nbsp; { this.props.player.chips }</p>
+        </div>
+      );
+    } else if (this.props.playerInThisSeat) {
       jsx = (
         <div className = { classes.seatTaken } style = { this.props.styleProp }>
-          <p>{ this.props.player.name } &nbsp;	&nbsp;	&nbsp; { this.props.player.chips }</p>
+          <p>{ this.props.playerInThisSeat.name } &nbsp;	&nbsp;	&nbsp; { this.props.playerInThisSeat.chips }</p>
         </div>
       );
     } else {
@@ -75,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     tableId: state.tableId,
     players: state.players,
-    currentPlayerId: state.currentPlayerId,
+    player: state.player,
     cookies: ownProps.cookies
   };
 };
